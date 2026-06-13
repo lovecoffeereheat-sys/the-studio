@@ -9,7 +9,7 @@ exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') return { statusCode: 405, headers: CORS, body: JSON.stringify({ error: 'Method not allowed' }) };
 
   const NOTION_KEY = process.env.NOTION_API_KEY;
-  const DS_ID = 'b2b6e024-e1dd-83ce-af70-875e4e76e8e4';
+  const DS_ID = '3756e024-e1dd-8070-a944-edd4d9a9d690';
 
   if (!NOTION_KEY) return { statusCode: 500, headers: CORS, body: JSON.stringify({ error: 'Notion key not configured' }) };
 
