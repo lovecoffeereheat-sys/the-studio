@@ -25,7 +25,7 @@ exports.handler = async (event) => {
   const properties = {
     title: [{ text: { content: title } }],
   };
-  if (status) properties.status = { select: { name: status } };
+  if (status) properties.status = { status: { name: status } };
   if (contentType) properties['content type'] = { multi_select: [{ name: contentType }] };
   if (pillar) properties.pillar = { select: { name: pillar } };
   if (platform) properties.platform = { select: { name: platform } };
