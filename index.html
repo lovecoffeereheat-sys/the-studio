@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Studio — Bottom of the Cup</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=Lato:wght@300;400&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --rose:#944e63;--rose-mid:#b47b84;--mauve:#caa6a6;--blush:#d6a39a;
+  --petal:#f6e6e3;--petal-light:#fdf4f5;--petal-border:#f0cfc9;
+  --navy:#16042d;--ink:#2c1a1a;--ink-light:#4a2e2e;
+  --muted:#6b5050;--faint:#a08080;--bg:#faf8f6;--white:#fff;
+  --steam:#e8d5d0;--success:#4a7c59;--error:#944e63;
+}
+html{font-size:16px;-webkit-font-smoothing:antialiased}
+body{background:var(--bg);color:var(--ink);font-family:'Lato',sans-serif;font-weight:300;min-height:100vh}
+
+/* ── HERO ── */
+.hero{background:var(--navy);padding:2.5rem 2rem 0;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(148,78,99,.22) 0%,transparent 70%);pointer-events:none}
+.steam-row{display:flex;justify-content:center;gap:5px;margin-bottom:.85rem;height:18px;align-items:flex-end}
+.sl{width:2px;background:rgba(214,163,154,.5);border-radius:2px;animation:sr 2.5s ease-in-out infinite}
+.sl:nth-child(1){height:12px;animation-delay:0s}.sl:nth-child(2){height:17px;animation-delay:.4s}.sl:nth-child(3){height:11px;animation-delay:.8s}
+@keyframes sr{0%,100%{opacity:.3;transform:translateY(0)}50%{opacity:.8;transform:translateY(-4px)}}
+.hero-ey{font-family:'Anton',sans-serif;font-size:.58rem;letter-spacing:.18em;color:var(--blush);opacity:.8;margin-bottom:.5rem}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4vw,2.5rem);font-weight:400;color:#fff;line-height:1.1;margin-bottom:.35rem}
+.hero h1 em{color:var(--blush);font-style:italic}
+.hero-sub{font-family:'Playfair Display',serif;font-style:italic;font-size:.85rem;color:rgba(214,163,154,.6);margin-bottom:1.5rem}
+.tab-bar{display:flex;justify-content:center;border-top:1px solid rgba(214,163,154,.15);position:relative;z-index:2}
+.tab-btn{flex:1;max-width:220px;padding:.75rem 1.5rem;background:transparent;border:none;border-bottom:2px solid transparent;color:rgba(214,163,154,.5);font-family:'Anton',sans-serif;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;transition:all .2s}
+.tab-btn:hover{color:rgba(214,163,154,.8)}
+.tab-btn.active{color:var(--blush);border-bottom-color:var(--rose)}
+
+/* ── LAYOUT ── */
+.studio-body{max-width:720px;margin:0 auto;padding:2.5rem 1.5rem 5rem}
+@media(max-width:720px){.studio-body{padding:1.5rem 1rem 4rem}}
+.tab-panel{display:none}.tab-panel.active{display:block}
+
+/* ── SIDEBAR ── */
+.entry-point{margin-bottom:2rem}
+.entry-q{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--ink);margin-bottom:.85rem;line-height:1.5}
+.entry-q em{font-style:italic;color:var(--rose-mid)}
+.entry-options{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:480px){.entry-options{grid-template-columns:1fr}}
+.entry-btn{padding:.7rem .95rem;background:var(--white);border:.5px solid var(--steam);border-radius:8px;text-align:left;cursor:pointer;transition:all .15s;font-family:'Lato',sans-serif;font-weight:300}
+.entry-btn:hover{border-color:var(--blush);background:var(--petal-light)}
+.entry-btn-label{font-family:'Anton',sans-serif;font-size:.58rem;letter-spacing:.1em;color:var(--rose);text-transform:uppercase;display:block;margin-bottom:3px}
+.entry-btn-desc{font-size:.75rem;color:var(--muted);line-height:1.4;font-style:italic;font-family:'Playfair Display',serif}
+
+/* ── LAST BREW ── */
+.last-brew{background:var(--petal-light);border:.5px solid var(--petal-border);border-radius:8px;padding:.85rem 1rem;margin-bottom:1.5rem;display:none}
+.last-brew.visible{display:block}
+.last-brew-label{font-family:'Anton',sans-serif;font-size:.55rem;letter-spacing:.12em;color:var(--rose-mid);text-transform:uppercase;margin-bottom:.4rem}
+.last-brew-preview{font-family:'Playfair Display',serif;font-style:italic;font-size:.82rem;color:var(--muted);line-height:1.5;margin-bottom:.6rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.last-brew-restore{background:none;border:.5px solid var(--blush);color:var(--rose);font-size:.62rem;font-family:'Anton',sans-serif;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border-radius:3px;cursor:pointer;transition:background .15s}
+.last-brew-restore:hover{background:var(--petal)}
+
+/* ── SECTION TOGGLES ── */
+.desk-section{border-top:.5px solid var(--steam)}
+.desk-section-header{display:flex;align-items:center;justify-content:space-between;padding:1.1rem 0;cursor:pointer;user-select:none}
+.desk-section-header:hover .dst{color:var(--rose)}
+.dst{font-family:'Anton',sans-serif;font-size:.6rem;letter-spacing:.16em;color:var(--rose-mid);text-transform:uppercase;transition:color .15s;display:flex;align-items:center;gap:.5rem}
+.dst .sdot{width:5px;height:5px;border-radius:50%;background:var(--mauve);flex-shrink:0}
+.dsc{color:var(--mauve);font-size:.75rem;transition:transform .2s}
+.desk-section.open .dsc{transform:rotate(180deg)}
+.desk-section-body{display:none;padding-bottom:1.75rem;animation:fadeUp .2s ease both}
+.desk-section.open .desk-section-body{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── FORM ── */
+.field-label{font-family:'Anton',sans-serif;font-size:.58rem;letter-spacing:.14em;color:var(--rose-mid);text-transform:uppercase;display:block;margin-bottom:.45rem}
+.field-hint{font-family:'Playfair Display',serif;font-style:italic;font-size:.78rem;color:var(--faint);margin-bottom:.85rem;line-height:1.55}
+.type-pills{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.75rem}
+.type-pill{background:none;border:1px solid var(--steam);color:var(--ink-light);font-family:'Lato',sans-serif;font-weight:300;font-size:.78rem;padding:.45rem 1rem;cursor:pointer;border-radius:20px;transition:all .18s;white-space:nowrap}
+.type-pill:hover{border-color:var(--mauve);color:var(--rose)}
+.type-pill.active{background:var(--rose);border-color:var(--rose);color:var(--petal);font-weight:400}
+.prompt-textarea{width:100%;min-height:110px;background:var(--white);border:1px solid var(--steam);border-radius:6px;padding:1rem 1.1rem;font-family:'Lato',sans-serif;font-weight:300;font-size:.92rem;color:var(--ink);line-height:1.7;resize:vertical;outline:none;transition:border-color .2s}
+.prompt-textarea:focus{border-color:var(--rose-mid)}
+.prompt-textarea::placeholder{color:var(--mauve);font-family:'Playfair Display',serif;font-style:italic;font-size:.88rem}
+.textarea-hint{font-family:'Playfair Display',serif;font-style:italic;font-size:.72rem;color:var(--mauve);margin-top:.4rem}
+.selects-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem}
+@media(max-width:480px){.selects-row{grid-template-columns:1fr}}
+.select-group label{display:block;font-family:'Anton',sans-serif;font-size:.58rem;letter-spacing:.14em;color:var(--rose-mid);text-transform:uppercase;margin-bottom:.45rem}
+.styled-select{width:100%;background:var(--white);border:1px solid var(--steam);border-radius:4px;padding:.65rem 2rem .65rem .9rem;font-family:'Lato',sans-serif;font-weight:300;font-size:.85rem;color:var(--ink);cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 12 8'%3E%3Cpath fill='%23c9a882' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .8rem center;outline:none;transition:border-color .2s}
+.styled-select:focus{border-color:var(--rose-mid)}
+.options-row{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1.25rem}
+.option-toggle{background:none;border:1px solid var(--steam);color:var(--rose-mid);font-family:'Lato',sans-serif;font-weight:300;font-size:.7rem;letter-spacing:.04em;padding:.35rem .85rem;cursor:pointer;border-radius:20px;transition:all .15s}
+.option-toggle:hover{border-color:var(--mauve);color:var(--rose)}
+.option-toggle.on{background:var(--ink);border-color:var(--ink);color:var(--petal)}
+.brew-btn{width:100%;background:var(--navy);color:var(--petal);border:none;font-family:'Playfair Display',serif;font-style:italic;font-size:1.05rem;font-weight:400;letter-spacing:.03em;padding:1rem 2rem;cursor:pointer;border-radius:4px;transition:background .2s;margin-top:1.5rem}
+.brew-btn:hover{background:var(--rose)}.brew-btn:disabled{opacity:.5;cursor:not-allowed}
+
+/* ── OUTPUT ── */
+.output-section{display:none;margin-top:1.5rem}.output-section.visible{display:block}
+.output-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:.5rem}
+.output-label{font-family:'Anton',sans-serif;font-size:.58rem;letter-spacing:.16em;color:var(--rose-mid);text-transform:uppercase}
+.output-actions{display:flex;gap:.4rem;flex-wrap:wrap}
+.output-action-btn{background:none;border:1px solid var(--steam);color:var(--rose-mid);font-family:'Lato',sans-serif;font-weight:300;font-size:.65rem;letter-spacing:.07em;text-transform:lowercase;padding:.3rem .8rem;cursor:pointer;border-radius:3px;transition:all .15s}
+.output-action-btn:hover{border-color:var(--rose-mid);color:var(--rose)}
+.save-btn{background:var(--rose);border-color:var(--rose);color:var(--petal)}
+.save-btn:hover{background:#7a3d52!important;color:var(--petal)!important}
+.output-box{background:var(--white);border:1px solid var(--steam);border-radius:4px;padding:1.75rem;min-height:180px}
+.output-box.streaming{border-color:var(--mauve)}
+.output-text{font-family:'Playfair Display',serif;font-size:.98rem;line-height:1.88;color:var(--ink);white-space:pre-wrap}
+.output-text.loading{color:var(--mauve);font-style:italic;font-size:.88rem}
+.cursor{display:inline-block;width:2px;height:1.05em;background:var(--rose-mid);margin-left:2px;vertical-align:text-bottom;animation:blink .8s step-end infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.section-divider{width:100%;height:.5px;background:linear-gradient(to right,transparent,var(--steam),transparent);margin:1.5rem 0}
+
+/* ── REBLEND ── */
+.reblend-section{display:none;margin-top:1.25rem;animation:fadeUp .25s ease both}.reblend-section.visible{display:block}
+.reblend-label{font-family:'Anton',sans-serif;font-size:.58rem;letter-spacing:.16em;color:var(--rose-mid);text-transform:uppercase;margin-bottom:.85rem;display:flex;align-items:center;gap:.6rem}
+.reblend-label::after{content:'';flex:1;height:.5px;background:var(--steam)}
+.reblend-toggles{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.85rem}
+.reblend-toggle{background:none;border:1px solid var(--steam);color:var(--rose-mid);font-family:'Lato',sans-serif;font-weight:300;font-size:.7rem;letter-spacing:.04em;padding:.35rem .85rem;cursor:pointer;border-radius:20px;transition:all .15s}
+.reblend-toggle:hover{border-color:var(--mauve);color:var(--rose)}.reblend-toggle.on{background:var(--ink);border-color:var(--ink);color:var(--petal)}
+.reblend-note{width:100%;background:var(--white);border:1px solid var(--steam);border-radius:4px;padding:.8rem 1rem;font-family:'Lato',sans-serif;font-weight:300;font-size:.88rem;color:var(--ink);line-height:1.6;resize:none;outline:none;margin-bottom:.85rem;height:68px;transition:border-color .2s}
+.reblend-note:focus{border-color:var(--rose-mid)}
+.reblend-note::placeholder{color:var(--mauve);font-family:'Playfair Display',serif;font-style:italic;font-size:.83rem}
+.reblend-btn{background:var(--ink-light);color:var(--petal);border:none;font-family:'Playfair Display',serif;font-style:italic;font-size:.95rem;padding:.8rem 2rem;cursor:pointer;border-radius:4px;transition:background .2s;width:100%}
+.reblend-btn:hover{background:var(--rose)}.reblend-btn:disabled{opacity:.5;cursor:not-allowed}
+
+/* ── SAVE CONFIRM ── */
+.save-confirm{background:var(--white);border:1px solid var(--steam);border-radius:4px;padding:1.4rem;margin-top:.85rem;display:none;animation:fadeUp .2s ease both}
+.save-confirm.open{display:block}
+.save-confirm-title{font-family:'Anton',sans-serif;font-size:.58rem;letter-spacing:.14em;color:var(--rose-mid);text-transform:uppercase;margin-bottom:.85rem}
+.save-fields{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.65rem;margin-bottom:.85rem}
+.save-title-field{grid-column:1/-1}
+.save-field label{display:block;font-family:'Anton',sans-serif;font-size:.55rem;letter-spacing:.1em;color:var(--mauve);text-transform:uppercase;margin-bottom:.3rem}
+.save-field select,.save-field input{width:100%;background:var(--petal-light);border:1px solid var(--steam);border-radius:3px;padding:.42rem .7rem;font-family:'Lato',sans-serif;font-weight:300;font-size:.8rem;color:var(--ink);outline:none;appearance:none}
+.save-confirm-actions{display:flex;gap:.5rem}
+.save-confirm-btn{background:var(--rose);color:var(--petal);border:none;font-family:'Lato',sans-serif;font-weight:300;font-size:.7rem;letter-spacing:.08em;text-transform:lowercase;padding:.48rem 1.2rem;cursor:pointer;border-radius:3px;transition:background .15s}
+.save-confirm-btn:hover{background:#7a3d52}.save-confirm-btn:disabled{opacity:.5;cursor:not-allowed}
+.save-cancel-btn{background:none;border:1px solid var(--steam);color:var(--rose-mid);font-family:'Lato',sans-serif;font-weight:300;font-size:.7rem;letter-spacing:.08em;text-transform:lowercase;padding:.48rem 1rem;cursor:pointer;border-radius:3px}
+
+/* ── MINI OUTPUT ── */
+.output-mini{display:none;margin-top:1.25rem}.output-mini.visible{display:block}
+.output-mini-box{background:var(--white);border:1px solid var(--steam);border-radius:4px;padding:1.4rem}
+.output-mini-text{font-family:'Playfair Display',serif;font-size:.92rem;line-height:1.85;color:var(--ink);white-space:pre-wrap;margin-bottom:.75rem}
+.output-mini-text.loading{color:var(--mauve);font-style:italic;font-size:.85rem}
+
+/* ── CTA SHELF ── */
+.cta-group{margin-bottom:1.5rem}
+.cta-group-label{font-family:'Anton',sans-serif;font-size:.55rem;letter-spacing:.16em;color:var(--mauve);text-transform:uppercase;margin-bottom:.7rem;display:flex;align-items:center;gap:.6rem}
+.cta-group-label::after{content:'';flex:1;height:.5px;background:var(--steam)}
+.cta-card{background:var(--white);border:1px solid var(--steam);border-radius:4px;padding:.95rem 1.1rem;margin-bottom:.5rem;display:flex;align-items:flex-start;gap:.85rem;transition:border-color .15s}
+.cta-card:hover{border-color:var(--mauve)}
+.cta-card-text{font-family:'Playfair Display',serif;font-size:.88rem;line-height:1.65;color:var(--ink);flex:1}
+.cta-card-link{font-family:'Anton',sans-serif;font-size:.55rem;letter-spacing:.08em;color:var(--mauve);text-transform:uppercase;margin-top:.3rem;display:block}
+.cta-copy-btn{background:none;border:1px solid var(--steam);color:var(--rose-mid);font-family:'Lato',sans-serif;font-weight:300;font-size:.62rem;letter-spacing:.06em;text-transform:lowercase;padding:.28rem .7rem;cursor:pointer;border-radius:3px;transition:all .15s;white-space:nowrap;flex-shrink:0;margin-top:.1rem}
+.cta-copy-btn:hover{border-color:var(--rose-mid);color:var(--rose)}.cta-copy-btn.copied{background:var(--success);border-color:var(--success);color:var(--white)}
+
+/* ── CHAT STARTER ── */
+.chat-tabs{display:flex;gap:.35rem;flex-wrap:wrap;margin-bottom:1.1rem}
+.chat-tab{background:none;border:1px solid var(--steam);color:var(--rose-mid);font-family:'Lato',sans-serif;font-weight:300;font-size:.65rem;letter-spacing:.08em;text-transform:lowercase;padding:.28rem .8rem;cursor:pointer;border-radius:3px;transition:all .15s}
+.chat-tab:hover{border-color:var(--mauve);color:var(--rose)}.chat-tab.active{background:var(--rose);border-color:var(--rose);color:var(--petal)}
+.chat-prompt-card{background:var(--petal-light);border:1px solid var(--petal-border);border-radius:4px;padding:1.35rem;margin-bottom:.5rem}
+.chat-prompt-text{font-family:'Playfair Display',serif;font-style:italic;font-size:1rem;line-height:1.7;color:var(--ink);margin-bottom:.9rem}
+.chat-prompt-actions{display:flex;gap:.5rem;align-items:center}
+.chat-use-btn{background:var(--rose);color:var(--petal);border:none;font-family:'Lato',sans-serif;font-weight:300;font-size:.7rem;letter-spacing:.08em;text-transform:lowercase;padding:.45rem 1.1rem;cursor:pointer;border-radius:3px;transition:background .15s}
+.chat-use-btn:hover{background:#7a3d52}
+.chat-draw-btn{background:none;border:1px solid var(--steam);color:var(--rose-mid);font-family:'Lato',sans-serif;font-weight:300;font-size:.7rem;letter-spacing:.08em;text-transform:lowercase;padding:.45rem 1rem;cursor:pointer;border-radius:3px;transition:all .15s}
+.chat-draw-btn:hover{border-color:var(--mauve);color:var(--rose)}
+.chat-count{font-size:.62rem;color:var(--mauve);letter-spacing:.05em;margin-left:auto}
+
+/* ── RECORDING ── */
+.rec-steps{display:flex;flex-direction:column;gap:1rem}
+.rec-step{background:var(--white);border:1px solid var(--steam);border-radius:6px;overflow:hidden}
+.rec-step-header{display:flex;align-items:center;gap:.65rem;padding:.75rem 1rem;background:var(--petal-light);border-bottom:.5px solid var(--petal-border)}
+.step-num{width:20px;height:20px;border-radius:50%;background:var(--rose);color:var(--petal);font-size:.58rem;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.step-label{font-family:'Anton',sans-serif;font-size:.6rem;letter-spacing:.12em;color:var(--rose-mid);text-transform:uppercase}
+.rec-step-body{padding:1rem}
+.connected-outputs{display:flex;flex-direction:column;gap:.85rem;margin-top:.85rem}
+.connected-output{border:.5px solid var(--steam);border-radius:4px;overflow:hidden}
+.co-header{display:flex;align-items:center;justify-content:space-between;padding:.55rem .9rem;background:var(--petal-light);border-bottom:.5px solid var(--petal-border)}
+.co-label{font-family:'Anton',sans-serif;font-size:.55rem;letter-spacing:.12em;color:var(--rose-mid);text-transform:uppercase}
+.co-body{background:var(--white);padding:.9rem 1rem;display:none}.co-body.visible{display:block}
+.co-text{font-family:'Playfair Display',serif;font-size:.88rem;line-height:1.8;color:var(--ink);white-space:pre-wrap;margin-bottom:.65rem}
+.co-actions{display:flex;gap:.4rem;align-items:center;flex-wrap:wrap}
+.co-gen-btn{background:var(--navy);color:var(--petal);border:none;font-family:'Lato',sans-serif;font-weight:300;font-size:.68rem;letter-spacing:.08em;text-transform:lowercase;padding:.42rem 1rem;cursor:pointer;border-radius:3px;transition:background .15s}
+.co-gen-btn:hover{background:var(--rose)}.co-gen-btn:disabled{opacity:.5;cursor:not-allowed}
+
+/* ── WEEKLY POUR ── */
+.pour-section{margin-bottom:1.5rem}
+.pour-divider{width:100%;height:.5px;background:linear-gradient(to right,transparent,var(--steam),transparent);margin:1.5rem 0}
+.pill-group{display:flex;gap:7px;flex-wrap:wrap}
+.pour-pill{padding:.42rem .95rem;border-radius:999px;border:.5px solid var(--steam);background:var(--white);color:var(--muted);font-size:.78rem;font-family:'Lato',sans-serif;font-weight:300;cursor:pointer;transition:all .15s}
+.pour-pill:hover{border-color:var(--blush);color:var(--rose);background:var(--petal-light)}
+.pour-pill.active{background:var(--petal);border-color:var(--rose);color:var(--rose);font-weight:400}
+.count-group{display:flex;gap:7px}
+.count-pill{width:42px;height:42px;border-radius:50%;border:.5px solid var(--steam);background:var(--white);color:var(--muted);font-family:'Anton',sans-serif;font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.count-pill:hover{border-color:var(--blush);color:var(--rose);background:var(--petal-light)}
+.count-pill.active{background:var(--rose);border-color:var(--rose);color:var(--petal)}
+.pour-textarea{width:100%;min-height:90px;background:var(--white);border:.5px solid var(--steam);border-radius:6px;padding:.9rem 1rem;font-family:'Playfair Display',serif;font-style:italic;font-size:.92rem;color:var(--ink);line-height:1.7;resize:vertical;outline:none;transition:border-color .15s}
+.pour-textarea:focus{border-color:var(--rose-mid)}
+.pour-textarea::placeholder{color:var(--faint);font-size:.85rem}
+.pour-brew-btn{width:100%;background:var(--navy);color:var(--petal);border:none;border-radius:6px;padding:.95rem 2rem;font-family:'Playfair Display',serif;font-style:italic;font-size:1rem;font-weight:400;cursor:pointer;transition:background .2s}
+.pour-brew-btn:hover{background:var(--rose)}.pour-brew-btn:disabled{opacity:.5;cursor:not-allowed}
+.week-output{display:none;margin-top:2rem}.week-output.visible{display:block}
+.week-output-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+.week-output-title{font-family:'Anton',sans-serif;font-size:.6rem;letter-spacing:.14em;color:var(--rose-mid);text-transform:uppercase}
+.notion-send-btn{display:inline-flex;align-items:center;gap:5px;padding:.42rem .95rem;background:var(--navy);color:var(--petal);border:none;border-radius:5px;font-family:'Anton',sans-serif;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:background .15s}
+.notion-send-btn:hover{background:var(--rose)}.notion-send-btn:disabled{opacity:.5;cursor:not-allowed}
+.week-note-block{font-family:'Playfair Display',serif;font-style:italic;font-size:.9rem;color:var(--muted);line-height:1.7;padding:.85rem 1.1rem;background:var(--petal-light);border-left:2px solid var(--blush);border-radius:0 5px 5px 0;margin-bottom:.85rem}
+.day-card{background:var(--white);border:.5px solid var(--steam);border-radius:8px;overflow:hidden;margin-bottom:.85rem}
+.day-card-header{display:flex;align-items:center;justify-content:space-between;padding:.65rem 1rem;background:var(--petal-light);border-bottom:.5px solid var(--petal-border)}
+.day-name{font-family:'Anton',sans-serif;font-size:.6rem;letter-spacing:.12em;color:var(--rose);text-transform:uppercase}
+.day-type{font-size:.62rem;font-family:'Lato',sans-serif;color:var(--rose-mid);background:var(--petal);border:.5px solid var(--blush);padding:2px 7px;border-radius:999px}
+.day-body{padding:.85rem 1rem}
+.day-task{font-family:'Playfair Display',serif;font-size:.92rem;color:var(--ink);font-weight:500;margin-bottom:.3rem;line-height:1.4}
+.day-desc{font-size:.78rem;color:var(--muted);line-height:1.55;font-family:'Lato',sans-serif;font-weight:300}
+.day-meta{display:flex;gap:5px;margin-top:.55rem;flex-wrap:wrap}
+.meta-tag{font-family:'Anton',sans-serif;font-size:.55rem;letter-spacing:.07em;text-transform:uppercase;padding:2px 6px;border-radius:3px;border:.5px solid}
+.tag-sub{background:#eeedfe;color:#534ab7;border-color:#afa9ec}
+.tag-note{background:#e1f5ee;color:#0f6e56;border-color:#5dcaa5}
+.tag-loom{background:#faeeda;color:#854f0b;border-color:#ef9f27}
+.tag-pin{background:#fcebeb;color:#a32d2d;border-color:#f09595}
+.tag-soc{background:#fbeaf0;color:#72243e;border-color:#ed93b1}
+.tag-cnt{background:#e6f1fb;color:#185fa5;border-color:#85b7eb}
+.notion-status{margin-top:1rem;padding:.85rem 1rem;border-radius:6px;font-family:'Playfair Display',serif;font-style:italic;font-size:.82rem;display:none}
+.notion-status.success{background:#eaf3de;color:#3b6d11;border:.5px solid #97c459;display:block}
+.notion-status.error{background:#fcebeb;color:#a32d2d;border:.5px solid #f09595;display:block}
+.notion-status.loading{background:var(--petal-light);color:var(--rose-mid);border:.5px solid var(--blush);display:block}
+
+/* ── KEY BANNER ── */
+.key-banner{background:var(--petal-light);border:.5px solid var(--petal-border);border-radius:6px;padding:.75rem 1rem;margin-bottom:1.25rem;display:none;align-items:center;gap:.75rem;flex-wrap:wrap}
+.key-banner.visible{display:flex}
+.key-banner-label{font-family:'Anton',sans-serif;font-size:.55rem;letter-spacing:.12em;text-transform:uppercase;color:var(--rose-mid);flex-shrink:0}
+.key-banner-input{flex:1;min-width:180px;background:var(--white);border:.5px solid var(--steam);border-radius:4px;padding:.38rem .7rem;font-family:'Lato',sans-serif;font-weight:300;font-size:.78rem;color:var(--ink);outline:none;transition:border-color .2s}
+.key-banner-input:focus{border-color:var(--rose-mid)}
+.key-banner-input::placeholder{color:var(--mauve);font-style:italic;font-size:.75rem}
+.key-banner-btn{background:var(--rose);color:var(--petal);border:none;font-family:'Anton',sans-serif;font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;padding:.38rem .85rem;border-radius:3px;cursor:pointer;transition:background .15s;flex-shrink:0}
+.key-banner-btn:hover{background:#7a3d52}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--petal);font-family:'Lato',sans-serif;font-size:.75rem;letter-spacing:.05em;padding:.6rem 1.4rem;border-radius:4px;opacity:0;transition:all .3s ease;pointer-events:none;z-index:300;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.success{background:var(--success)}.toast.error{background:var(--error)}
+
+@media(max-width:480px){.save-fields{grid-template-columns:1fr 1fr}.save-title-field{grid-column:1/-1}}
+@media(prefers-reduced-motion:reduce){.sl,.cursor{animation:none}}
+
+/* ── VARIATION PICKER ── */
+.var-picker{display:none;margin-top:1.25rem;animation:fadeUp .2s ease both}
+.var-picker.visible{display:block}
+.var-picker-label{font-family:'Anton',sans-serif;font-size:.58rem;letter-spacing:.14em;color:var(--rose-mid);text-transform:uppercase;margin-bottom:.75rem}
+.var-cards{display:flex;flex-direction:column;gap:.65rem;margin-bottom:1rem}
+.var-card{background:var(--white);border:1.5px solid var(--steam);border-radius:6px;padding:1rem 1.1rem;cursor:pointer;transition:all .15s;position:relative}
+.var-card:hover{border-color:var(--rose-mid);background:var(--petal-light)}
+.var-card.selected{border-color:var(--rose);background:var(--petal-light)}
+.var-card-num{font-family:'Anton',sans-serif;font-size:.52rem;letter-spacing:.12em;color:var(--rose);text-transform:uppercase;margin-bottom:.4rem}
+.var-card-text{font-family:'Playfair Display',serif;font-size:.88rem;line-height:1.75;color:var(--ink);white-space:pre-wrap;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.var-card.selected .var-card-text{-webkit-line-clamp:unset}
+.var-card-badge{position:absolute;top:.65rem;right:.75rem;font-family:'Anton',sans-serif;font-size:.5rem;letter-spacing:.1em;background:var(--rose);color:white;padding:2px 7px;border-radius:3px;display:none}
+.var-card.selected .var-card-badge{display:block}
+.var-use-btn{background:var(--rose);color:var(--petal);border:none;font-family:'Lato',sans-serif;font-weight:300;font-size:.7rem;letter-spacing:.08em;text-transform:lowercase;padding:.5rem 1.2rem;cursor:pointer;border-radius:3px;transition:background .15s;display:none}
+.var-use-btn.visible{display:inline-block}
+.var-use-btn:hover{background:#7a3d52}
+
+/* ── NOTION SAVE STATUS ── */
+.notion-save-status{margin-top:.75rem;padding:.65rem .9rem;border-radius:5px;font-family:'Playfair Display',serif;font-style:italic;font-size:.8rem;display:none}
+.notion-save-status.show{display:block}
+.notion-save-status.saving{background:var(--petal-light);color:var(--rose-mid);border:.5px solid var(--petal-border)}
+.notion-save-status.saved{background:#eaf3de;color:#3b6d11;border:.5px solid #97c459}
+.notion-save-status.error{background:#fcebeb;color:#a32d2d;border:.5px solid #f09595}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="steam-row" aria-hidden="true"><div class="sl"></div><div class="sl"></div><div class="sl"></div></div>
+  <p class="hero-ey">Bottom of the Cup</p>
+  <h1>The <em>Studio</em></h1>
+  <p class="hero-sub">plan your week. write your words. everything in one place.</p>
+  <div class="tab-bar">
+    <button class="tab-btn active" id="tabWrite" onclick="switchTab('Write')">✦ writing desk</button>
+    <button class="tab-btn" id="tabPour" onclick="switchTab('Pour')">☕ weekly pour</button>
+  </div>
+</div>
+
+<!-- BODY -->
+<div class="studio-body">
+
+  <!-- KEY BANNERS -->
+  <div class="key-banner" id="akBanner">
+    <span class="key-banner-label">Anthropic Key</span>
+    <input type="password" class="key-banner-input" id="bannerAK" placeholder="sk-ant-api03-..." autocomplete="off"/>
+    <button class="key-banner-btn" onclick="saveBannerAK()">save</button>
+  </div>
+  <!-- Notion reads handled via Claude MCP — no Notion key needed for sidebar -->
+
+  <!-- ══ WRITING DESK ══ -->
+  <div class="tab-panel active" id="panelWrite">
+
+    <div class="last-brew" id="lastBrewBanner">
+      <div class="last-brew-label">last brew</div>
+      <div class="last-brew-preview" id="lastBrewPreview"></div>
+      <button class="last-brew-restore" onclick="restoreLastBrew()">pick up where you left off →</button>
+    </div>
+
+    <div class="entry-point" id="entryPoint">
+      <p class="entry-q">what do you need to do <em>today?</em></p>
+      <div class="entry-options">
+        <button class="entry-btn" onclick="routeTo('sectionBrew')"><span class="entry-btn-label">write something new</span><span class="entry-btn-desc">a note, essay, caption, email</span></button>
+        <button class="entry-btn" onclick="routeTo('sectionReply')"><span class="entry-btn-label">reply to a comment</span><span class="entry-btn-desc">write back in your voice</span></button>
+        <button class="entry-btn" onclick="routeTo('sectionRestack')"><span class="entry-btn-label">restack something</span><span class="entry-btn-desc">add your voice to a post</span></button>
+        <button class="entry-btn" onclick="routeTo('sectionRecording')"><span class="entry-btn-label">I have a recording</span><span class="entry-btn-desc">Loom transcript → post + note + pin</span></button>
+        <button class="entry-btn" onclick="routeTo('sectionThread')"><span class="entry-btn-label">spark a conversation</span><span class="entry-btn-desc">draw a thread starter prompt</span></button>
+        <button class="entry-btn" onclick="routeTo('sectionCTA')"><span class="entry-btn-label">grab a CTA</span><span class="entry-btn-desc">ready-to-paste call to actions</span></button>
+      </div>
+    </div>
+
+    <!-- BREW TOOL -->
+    <div class="desk-section" id="sectionBrew">
+      <div class="desk-section-header" onclick="toggleSection('sectionBrew')">
+        <span class="dst"><span class="sdot"></span>the brew tool — write something</span><span class="dsc">▼</span>
+      </div>
+      <div class="desk-section-body">
+        <div style="text-align:center;margin-bottom:1.5rem;">
+          <button style="background:none;border:1px solid var(--steam);color:var(--rose-mid);font-family:'Lato',sans-serif;font-weight:300;font-size:.75rem;letter-spacing:.1em;text-transform:lowercase;padding:.5rem 1.4rem;cursor:pointer;border-radius:3px;display:inline-flex;align-items:center;gap:.4rem;transition:all .2s" id="sparkBtn" onclick="togglePicker()">✦ draw a prompt</button>
+        </div>
+        <div id="pickerPanel" style="background:var(--white);border:1px solid var(--steam);border-radius:4px;padding:1.5rem;margin-bottom:1.5rem;display:none;">
+          <div style="display:flex;gap:.35rem;flex-wrap:wrap;margin-bottom:1rem;" id="pickerFilters">
+            <button class="chat-tab active" data-group="thread" data-val="all" onclick="pickerFilter(this)">all</button>
+            <button class="chat-tab" data-group="thread" data-val="body" onclick="pickerFilter(this)">body</button>
+            <button class="chat-tab" data-group="thread" data-val="grace" onclick="pickerFilter(this)">grace</button>
+            <button class="chat-tab" data-group="thread" data-val="cup" onclick="pickerFilter(this)">cup</button>
+            <button class="chat-tab active" data-group="type" data-val="all" onclick="pickerFilter(this)" style="margin-left:.5rem;">all types</button>
+            <button class="chat-tab" data-group="type" data-val="note" onclick="pickerFilter(this)">notes</button>
+            <button class="chat-tab" data-group="type" data-val="essay" onclick="pickerFilter(this)">essays</button>
+            <button class="chat-tab" data-group="type" data-val="instagram" onclick="pickerFilter(this)">instagram</button>
+            <button class="chat-tab" data-group="type" data-val="email" onclick="pickerFilter(this)">email</button>
+          </div>
+          <div id="pickerCard" style="background:var(--petal-light);border:1px solid var(--petal-border);border-radius:4px;padding:1.25rem;">
+            <p id="pickerPrompt" style="font-family:'Playfair Display',serif;font-style:italic;font-size:1rem;line-height:1.65;color:var(--ink);margin-bottom:.85rem;"></p>
+            <div style="display:flex;gap:.5rem;align-items:center;">
+              <button class="save-confirm-btn" onclick="usePrompt()">use this prompt →</button>
+              <button class="chat-draw-btn" onclick="drawPrompt()">draw another</button>
+              <span id="pickerCount" style="font-size:.62rem;color:var(--mauve);margin-left:auto;"></span>
+            </div>
+          </div>
+        </div>
+
+        <span class="field-label">what are you writing?</span>
+        <div class="type-pills" style="margin-bottom:1.25rem;">
+          <button class="type-pill active" data-type="Substack Note">Substack Note</button>
+          <button class="type-pill" data-type="Essay">Essay</button>
+          <button class="type-pill" data-type="Instagram Caption">Instagram Caption</button>
+          <button class="type-pill" data-type="Email / Newsletter">Email / Newsletter</button>
+          <button class="type-pill" data-type="Welcome Email">Welcome Email</button>
+          <button class="type-pill" data-type="Buy Me a Coffee">Buy Me a Coffee</button>
+          <button class="type-pill" data-type="SEO Block">SEO Block</button>
+          <button class="type-pill" data-type="Comment Reply">Comment Reply</button>
+        </div>
+        <div class="section-divider"></div>
+        <span class="field-label">the idea or prompt</span>
+        <textarea class="prompt-textarea" id="promptInput" placeholder="Paste a prompt, a half-formed thought, a first line you keep coming back to..."></textarea>
+        <p class="textarea-hint" id="textareaHint">For Notes: drop in the noticing, or the first line you keep coming back to.</p>
+        <div class="selects-row" style="margin-top:1.25rem;">
+          <div class="select-group"><label>Which Cup</label>
+            <select class="styled-select" id="pillarSelect"><option value="">— any pillar —</option><option>body</option><option>grace</option><option>cup</option><option>money</option><option>building</option></select>
+          </div>
+          <div class="select-group"><label>Register</label>
+            <select class="styled-select" id="registerSelect"><option value="wry &amp; quiet">wry &amp; quiet</option><option value="raw &amp; unresolved">raw &amp; unresolved</option><option value="warm &amp; steady">warm &amp; steady</option><option value="wry &amp; raw">wry &amp; raw</option></select>
+          </div>
+        </div>
+        <span class="field-label">options</span>
+        <div class="options-row">
+          <button class="option-toggle" data-opt="3 variations">3 variations</button>
+          <button class="option-toggle" data-opt="soft CTA">soft CTA</button>
+          <button class="option-toggle" data-opt="first lines only">first lines only</button>
+          <button class="option-toggle" data-opt="shorter">shorter</button>
+          <button class="option-toggle" data-opt="push it rawer">push it rawer</button>
+          <button class="option-toggle" data-opt="SEO block">SEO block</button>
+          <button class="option-toggle" data-opt="hashtags">hashtags</button>
+          <button class="option-toggle" data-opt="add emojis">add emojis</button>
+        </div>
+        <button class="brew-btn" id="brewBtn" onclick="brew()">brew it →</button>
+        <!-- VARIATION PICKER -->
+        <div class="var-picker" id="varPicker">
+          <div class="var-picker-label">three variations — pick the one that lands</div>
+          <div class="var-cards" id="varCards"></div>
+          <button class="var-use-btn" id="varUseBtn" onclick="useSelectedVariation()">use this one →</button>
+        </div>
+
+        <div class="output-section" id="outputSection">
+          <div class="section-divider"></div>
+          <div class="output-header">
+            <span class="output-label">the pour</span>
+            <div class="output-actions">
+              <button class="output-action-btn" onclick="copyOutput()">copy</button>
+              <button class="output-action-btn" onclick="toggleReblend()">reblend</button>
+              <button class="output-action-btn" onclick="brew()">brew again</button>
+              <button class="output-action-btn save-btn" onclick="openSaveConfirm()">save to notion →</button>
+            </div>
+          </div>
+          <div class="output-box" id="outputBox"><div class="output-text" id="outputText"></div></div>
+          <div class="reblend-section" id="reblendSection">
+            <p class="reblend-label">reblend it</p>
+            <div class="reblend-toggles">
+              <button class="reblend-toggle" data-adj="sharper opening">sharper opening</button>
+              <button class="reblend-toggle" data-adj="softer ending">softer ending</button>
+              <button class="reblend-toggle" data-adj="cut the last line">cut the last line</button>
+              <button class="reblend-toggle" data-adj="push it rawer">push it rawer</button>
+              <button class="reblend-toggle" data-adj="pull it back">pull it back</button>
+              <button class="reblend-toggle" data-adj="shorter">shorter</button>
+              <button class="reblend-toggle" data-adj="wry it up">wry it up</button>
+              <button class="reblend-toggle" data-adj="warmer">warmer</button>
+              <button class="reblend-toggle" data-adj="stronger first line">stronger first line</button>
+            </div>
+            <textarea class="reblend-note" id="reblendNote" placeholder="anything specific — 'the ending feels too tidy', 'try a different angle'..."></textarea>
+            <button class="reblend-btn" id="reblendBtn" onclick="reblend()">reblend it →</button>
+          </div>
+          <div class="save-confirm" id="saveConfirm">
+            <p class="save-confirm-title">pour it into the content pour over</p>
+            <div class="save-fields">
+              <div class="save-field save-title-field"><label>Title</label><input type="text" id="saveTitle" placeholder="working title..."/></div>
+              <div class="save-field"><label>Status</label><select id="saveStatus" style="appearance:none;"><option value="idea">idea</option><option value="drafting">drafting</option><option value="ready">ready</option></select></div>
+              <div class="save-field"><label>Content Type</label><select id="saveContentType" style="appearance:none;"><option value="note">note</option><option value="essay/post">essay / post</option><option value="social post">social post</option><option value="chat thread">chat thread</option></select></div>
+              <div class="save-field"><label>Pillar</label><select id="savePillar" style="appearance:none;"><option value="">— none —</option><option value="grace">grace</option><option value="cup">cup</option><option value="body">body</option><option value="money">money</option><option value="building">building</option><option value="body &amp; chronic illness">body &amp; chronic illness</option></select></div>
+              <div class="save-field"><label>Platform</label><select id="savePlatform" style="appearance:none;"><option value="substack">substack</option><option value="instagram">instagram</option><option value="podcast">podcast</option></select></div>
+              <div class="save-field"><label>Tone</label><select id="saveTone" style="appearance:none;"><option value="between sips">between sips</option><option value="the dark roast">the dark roast</option><option value="still steeping">still steeping</option></select></div>
+            </div>
+            <div class="notion-save-status" id="notionSaveStatus"></div>
+            <div class="save-confirm-actions">
+              <button class="save-confirm-btn" id="saveConfirmBtn" onclick="saveToNotion()">pour it in →</button>
+              <button class="save-cancel-btn" onclick="closeSaveConfirm()">cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- QUICK POUR -->
+    <div class="desk-section" id="sectionReply">
+      <div class="desk-section-header" onclick="toggleSection('sectionReply')">
+        <span class="dst"><span class="sdot"></span>the quick pour — reply in your voice</span><span class="dsc">▼</span>
+      </div>
+      <div class="desk-section-body">
+        <p class="field-hint">someone replied to your note. drop in their comment and get a reply in your voice.</p>
+        <span class="field-label" style="margin-bottom:.4rem;">post url <span style="font-size:.58rem;color:var(--faint);font-style:italic;text-transform:none;letter-spacing:0;">(optional — paste your Substack post link)</span></span>
+        <div style="display:flex;gap:.5rem;margin-bottom:1rem;align-items:center;">
+          <input type="text" class="prompt-textarea" id="postUrlInput" placeholder="https://bottomcup.substack.com/p/..." style="min-height:auto;padding:.55rem .9rem;flex:1;font-size:.82rem;"/>
+          <button onclick="fetchPostContext()" style="background:var(--navy);color:var(--petal);border:none;font-family:'Anton',sans-serif;font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;padding:.55rem 1rem;border-radius:4px;cursor:pointer;white-space:nowrap;flex-shrink:0;" id="fetchUrlBtn">fetch →</button>
+        </div>
+        <span class="field-label" style="margin-bottom:.4rem;">your original note <span style="font-size:.58rem;color:var(--faint);font-style:italic;text-transform:none;letter-spacing:0;">(or paste manually)</span></span>
+        <textarea class="prompt-textarea" id="origNoteInput" rows="2" placeholder="paste your original note for context, or fetch it from the URL above..." style="min-height:70px;margin-bottom:1rem;"></textarea>
+        <span class="field-label" style="margin-bottom:.4rem;">their reply</span>
+        <textarea class="prompt-textarea" id="snippetInput" rows="2" placeholder="paste their comment here..." style="min-height:70px;margin-bottom:1rem;"></textarea>
+        <span class="field-label" style="margin-bottom:.5rem;">tone</span>
+        <div class="type-pills" style="margin-bottom:1.25rem;" id="replyTones">
+          <button class="type-pill active" data-tone="me too energy">me too energy</button>
+          <button class="type-pill" data-tone="add something real">add something real</button>
+          <button class="type-pill" data-tone="wry agreement">wry agreement</button>
+          <button class="type-pill" data-tone="warm &amp; seen">warm &amp; seen</button>
+          <button class="type-pill" data-tone="gentle pushback">gentle pushback</button>
+          <button class="type-pill" data-tone="coffee-loving">coffee-loving</button>
+          <button class="type-pill" data-tone="grace — personal, specific, hers">grace</button>
+        </div>
+        <span class="field-label" style="margin-bottom:.4rem;">help me say this <span style="font-size:.58rem;color:var(--faint);font-style:italic;text-transform:none;letter-spacing:0;">(optional — rough idea, Grace will shape it)</span></span>
+        <textarea class="prompt-textarea" id="replyDraftInput" rows="2" placeholder="e.g. I want to say I really relate to this but also I've been thinking about it differently lately..." style="min-height:65px;margin-bottom:1rem;"></textarea>
+        <button class="brew-btn" id="replyBtn" onclick="brewReply()" style="margin-top:0;">pour a reply →</button>
+        <div class="output-mini" id="replyOutput">
+          <div class="section-divider"></div>
+          <div class="output-header"><span class="output-label">the reply</span><div class="output-actions"><button class="output-action-btn" onclick="copyMini('replyText')">copy</button><button class="output-action-btn" onclick="brewReply()">try again</button></div></div>
+          <div class="output-mini-box"><div class="output-mini-text" id="replyText"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESTACK -->
+    <div class="desk-section" id="sectionRestack">
+      <div class="desk-section-header" onclick="toggleSection('sectionRestack')">
+        <span class="dst"><span class="sdot"></span>the restack — add your voice</span><span class="dsc">▼</span>
+      </div>
+      <div class="desk-section-body">
+        <p class="field-hint">paste in a post worth restacking. get a short note in your voice — something that adds to it.</p>
+        <textarea class="prompt-textarea" id="restackInput" rows="4" placeholder="paste the post you want to restack..."></textarea>
+        <p class="textarea-hint" style="margin-bottom:1rem;">under 40 words. sounds like something you'd say over coffee.</p>
+        <span class="field-label" style="margin-bottom:.5rem;">your angle</span>
+        <div class="type-pills" style="margin-bottom:1.25rem;" id="restackAngles">
+          <button class="type-pill active" data-angle="this is exactly it">this is exactly it</button>
+          <button class="type-pill" data-angle="adds something of my own">adds something of my own</button>
+          <button class="type-pill" data-angle="wry recognition">wry recognition</button>
+          <button class="type-pill" data-angle="warm witness">warm witness</button>
+          <button class="type-pill" data-angle="coffee-loving">coffee-loving</button>
+        </div>
+        <button class="brew-btn" id="restackBtn" onclick="brewRestack()" style="margin-top:0;">draft the restack →</button>
+        <div class="output-mini" id="restackOutput">
+          <div class="section-divider"></div>
+          <div class="output-header"><span class="output-label">the restack note</span><div class="output-actions"><button class="output-action-btn" onclick="copyMini('restackText')">copy</button><button class="output-action-btn" onclick="brewRestack()">try again</button></div></div>
+          <div class="output-mini-box"><div class="output-mini-text" id="restackText"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FROM THE RECORDING -->
+    <div class="desk-section" id="sectionRecording">
+      <div class="desk-section-header" onclick="toggleSection('sectionRecording')">
+        <span class="dst"><span class="sdot"></span>from the recording — one session, three pieces</span><span class="dsc">▼</span>
+      </div>
+      <div class="desk-section-body">
+        <p class="field-hint">record your screen with Loom, paste the transcript. get a Substack post, a Note, and a Pinterest caption — all in your voice.</p>
+        <div class="rec-steps">
+          <div class="rec-step"><div class="rec-step-header"><div class="step-num">1</div><span class="step-label">paste your transcript</span></div><div class="rec-step-body"><textarea class="prompt-textarea" id="transcriptInput" rows="6" placeholder="paste your Loom transcript here — rambling, filler words, all of it..."></textarea><p class="textarea-hint" style="margin-top:.4rem;">Loom auto-generates a transcript in the sidebar.</p></div></div>
+          <div class="rec-step"><div class="rec-step-header"><div class="step-num">2</div><span class="step-label">what was this session about?</span></div><div class="rec-step-body"><div class="type-pills" style="margin-bottom:.85rem;" id="recordingTypes"><button class="type-pill active" data-rtype="building a tool">building a tool</button><button class="type-pill" data-rtype="using a tool">using a tool</button><button class="type-pill" data-rtype="a process or workflow">a process or workflow</button><button class="type-pill" data-rtype="a personal reflection">a personal reflection</button><button class="type-pill" data-rtype="troubleshooting something">troubleshooting something</button></div><textarea class="prompt-textarea" id="recordingContext" rows="2" placeholder="anything extra — 'I built a brain dump tool using Claude'..." style="min-height:65px;"></textarea></div></div>
+          <div class="rec-step"><div class="rec-step-header"><div class="step-num">3</div><span class="step-label">generate your content</span></div><div class="rec-step-body">
+            <button class="brew-btn" id="recordingBrewBtn" onclick="brewFromRecording()" style="margin-top:0;">brew the post →</button>
+            <div class="connected-outputs" id="recordingOutputs" style="display:none;">
+              <div class="connected-output"><div class="co-header"><span class="co-label">substack post</span><div class="co-actions"><button class="output-action-btn" onclick="copyCo('postText')">copy</button><button class="co-gen-btn" id="noteFromPostBtn" onclick="brewNoteFromPost()">write a note for this →</button></div></div><div class="co-body visible" id="postOutputBody"><div class="co-text" id="postText"></div></div></div>
+              <div class="connected-output" id="noteOutputBlock" style="display:none;"><div class="co-header"><span class="co-label">substack note</span><div class="co-actions"><button class="output-action-btn" onclick="copyCo('noteText')">copy</button><button class="co-gen-btn" id="pinFromPostBtn" onclick="brewPinFromPost()">write a pinterest caption →</button></div></div><div class="co-body visible" id="noteOutputBody"><div class="co-text" id="noteText"></div></div></div>
+              <div class="connected-output" id="pinOutputBlock" style="display:none;"><div class="co-header"><span class="co-label">pinterest caption</span><div class="co-actions"><button class="output-action-btn" onclick="copyCo('pinText')">copy</button></div></div><div class="co-body visible" id="pinOutputBody"><div class="co-text" id="pinText"></div></div></div>
+            </div>
+          </div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- THREAD STARTER -->
+    <div class="desk-section" id="sectionThread">
+      <div class="desk-section-header" onclick="toggleSection('sectionThread')">
+        <span class="dst"><span class="sdot"></span>the thread starter — spark a conversation</span><span class="dsc">▼</span>
+      </div>
+      <div class="desk-section-body">
+        <p class="field-hint">prompts for Substack chats and threads. draw one, use it as-is or hand it to the brew tool.</p>
+        <div class="chat-tabs" id="chatTabs">
+          <button class="chat-tab active" data-cat="all" onclick="chatTabClick(this)">all</button>
+          <button class="chat-tab" data-cat="wry" onclick="chatTabClick(this)">wry &amp; coffee-loving</button>
+          <button class="chat-tab" data-cat="body" onclick="chatTabClick(this)">body &amp; rhythm</button>
+          <button class="chat-tab" data-cat="invitational" onclick="chatTabClick(this)">invitational</button>
+          <button class="chat-tab" data-cat="engagement" onclick="chatTabClick(this)">engagement</button>
+        </div>
+        <div id="chatCard" class="chat-prompt-card">
+          <p class="chat-prompt-text" id="chatPromptText"></p>
+          <div class="chat-prompt-actions"><button class="chat-use-btn" onclick="useChatPrompt()">send to brew →</button><button class="chat-draw-btn" onclick="drawChatPrompt()">draw another</button><span class="chat-count" id="chatCount"></span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA SHELF -->
+    <div class="desk-section" id="sectionCTA">
+      <div class="desk-section-header" onclick="toggleSection('sectionCTA')">
+        <span class="dst"><span class="sdot"></span>the cta shelf — grab and go</span><span class="dsc">▼</span>
+      </div>
+      <div class="desk-section-body">
+        <p class="field-hint">pre-written, ready to drop in. copy, tweak the detail, post it.</p>
+        <div class="cta-group">
+          <div class="cta-group-label">buy me a coffee</div>
+          <div class="cta-card"><div><p class="cta-card-text">If something here has sat with you — a note, a Tuesday you recognised, a sentence you reread — this is just a way to say so. No obligation. No fanfare.</p><span class="cta-card-link">buymeacoffee.com/grace.sarah</span></div><button class="cta-copy-btn" onclick="copyCta(this,'If something here has sat with you — a note, a Tuesday you recognised, a sentence you reread — this is just a way to say so. No obligation. No fanfare.\n\n☕ buymeacoffee.com/grace.sarah')">copy</button></div>
+          <div class="cta-card"><div><p class="cta-card-text">The writing takes time. The honesty takes more. If this place has been worth something to you — even once — a coffee keeps it going.</p><span class="cta-card-link">buymeacoffee.com/grace.sarah</span></div><button class="cta-copy-btn" onclick="copyCta(this,'The writing takes time. The honesty takes more. If this place has been worth something to you — even once — a coffee keeps it going.\n\n☕ buymeacoffee.com/grace.sarah')">copy</button></div>
+        </div>
+        <div class="cta-group">
+          <div class="cta-group-label">brain dump tool</div>
+          <div class="cta-card"><div><p class="cta-card-text">I built a brain dump tool for the mornings when you can't find the thread. Pour out whatever's in your head and it hands you back clarity — what matters today, what can wait, and the one thing to start with.</p><span class="cta-card-link">botcbraindump.netlify.app</span></div><button class="cta-copy-btn" onclick="copyCta(this,'I built a brain dump tool for the mornings when you can\'t find the thread. Pour out whatever\'s in your head and it hands you back clarity — what matters today, what can wait, and the one thing to start with.\n\nbotcbraindump.netlify.app')">copy</button></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end panelWrite -->
+
+  <!-- ══ WEEKLY POUR ══ -->
+  <div class="tab-panel" id="panelPour">
+    <div class="pour-section">
+      <span class="field-label">check the temperature</span>
+      <p class="field-hint">how does this week feel overall — before you've planned anything?</p>
+      <div class="pill-group" id="energyGroup">
+        <button class="pour-pill" data-val="low" onclick="selectPourPill('energyGroup',this)">cold cup — low energy week</button>
+        <button class="pour-pill" data-val="medium" onclick="selectPourPill('energyGroup',this)">lukewarm — managing it</button>
+        <button class="pour-pill" data-val="good" onclick="selectPourPill('energyGroup',this)">fresh pour — feeling good</button>
+      </div>
+    </div>
+    <div class="pour-divider"></div>
+    <div class="pour-section">
+      <span class="field-label">what's in the pot</span>
+      <p class="field-hint">what are you building, launching, or have just finished?</p>
+      <textarea class="pour-textarea" id="whatsHappening" placeholder="the brain dump tool just went live, recording some Looms this week, Writing Desk update coming..."></textarea>
+    </div>
+    <div class="pour-divider"></div>
+    <div class="pour-section">
+      <span class="field-label">how many pieces this week?</span>
+      <p class="field-hint">be honest. what can you actually put out without draining the pot?</p>
+      <div class="count-group" id="countGroup">
+        <button class="count-pill" data-val="1" onclick="selectPourPill('countGroup',this)">1</button>
+        <button class="count-pill" data-val="2" onclick="selectPourPill('countGroup',this)">2</button>
+        <button class="count-pill" data-val="3" onclick="selectPourPill('countGroup',this)">3</button>
+        <button class="count-pill" data-val="4" onclick="selectPourPill('countGroup',this)">4</button>
+        <button class="count-pill" data-val="5" onclick="selectPourPill('countGroup',this)">5</button>
+      </div>
+    </div>
+    <div class="pour-divider"></div>
+    <div class="pour-section">
+      <span class="field-label">what's available to work with?</span>
+      <p class="field-hint">select everything that could be in play this week.</p>
+      <div class="pill-group" id="typesGroup">
+        <button class="pour-pill" data-val="Substack post" onclick="togglePourPill(this)">substack post</button>
+        <button class="pour-pill" data-val="Substack Note" onclick="togglePourPill(this)">substack note</button>
+        <button class="pour-pill" data-val="Loom recording" onclick="togglePourPill(this)">loom recording</button>
+        <button class="pour-pill" data-val="Pinterest pin" onclick="togglePourPill(this)">pinterest pin</button>
+        <button class="pour-pill" data-val="tool launch post" onclick="togglePourPill(this)">tool launch post</button>
+        <button class="pour-pill" data-val="email / newsletter" onclick="togglePourPill(this)">email / newsletter</button>
+      </div>
+    </div>
+    <div class="pour-divider"></div>
+    <div class="pour-section">
+      <span class="field-label">anything to work around?</span>
+      <p class="field-hint">appointments, low days, things you're avoiding.</p>
+      <textarea class="pour-textarea" id="constraints" placeholder="doctor's appointment Wednesday, tend to crash Thursday afternoons..." style="min-height:75px;"></textarea>
+    </div>
+    <button class="pour-brew-btn" id="pourBrewBtn" onclick="brewWeek()">brew my week →</button>
+    <div class="week-output" id="weekOutput">
+      <div class="pour-divider"></div>
+      <div class="week-output-header">
+        <span class="week-output-title">your weekly pour</span>
+        <button class="notion-send-btn" id="notionSendBtn" onclick="sendToNotion()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          send to notion
+        </button>
+      </div>
+      <div id="weekPlan"></div>
+      <div class="notion-status" id="notionStatus"></div>
+    </div>
+  </div><!-- end panelPour -->
+
+
+</div><!-- end studio-body -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ── KEYS ─────────────────────────────────────────────────────
+function getAK(){return sessionStorage.getItem('botc_ak')||''}
+function getNK(){return ''}// Notion writes handled via Claude MCP
+function checkKeys(){
+  const noAK=!getAK();
+  document.getElementById('akBanner').classList.toggle('visible',noAK);
+}
+function saveBannerAK(){
+  const v=document.getElementById('bannerAK').value.trim();
+  if(!v){showToast('paste your Anthropic key','error');return}
+  sessionStorage.setItem('botc_ak',v);
+  document.getElementById('akBanner').classList.remove('visible');
+  document.getElementById('bannerAK').value='';
+  showToast("Anthropic key saved ☕",'success');
+}
+document.getElementById('bannerAK').addEventListener('keydown',e=>{if(e.key==='Enter')saveBannerAK()});
+checkKeys();
+
+// ── TABS ─────────────────────────────────────────────────────
+function switchTab(tab){
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel'+tab).classList.add('active');
+  document.getElementById('tab'+tab).classList.add('active');
+}
+
+// ── ROUTING ──────────────────────────────────────────────────
+function routeTo(id){
+  const el=document.getElementById(id);if(!el)return;
+  if(!el.classList.contains('open'))el.classList.add('open');
+  setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'start'}),50);
+}
+
+// ── SECTION TOGGLES ──────────────────────────────────────────
+function toggleSection(id){document.getElementById(id).classList.toggle('open')}
+
+// ── LAST BREW MEMORY ─────────────────────────────────────────
+function saveLastBrew(text,type,prompt){
+  try{sessionStorage.setItem('botc_last_brew',JSON.stringify({text,type,prompt}))}catch(e){}
+}
+function loadLastBrew(){
+  try{
+    const raw=sessionStorage.getItem('botc_last_brew');if(!raw)return;
+    const d=JSON.parse(raw);if(!d.text)return;
+    document.getElementById('lastBrewPreview').textContent=d.text.slice(0,120)+(d.text.length>120?'…':'');
+    document.getElementById('lastBrewBanner').classList.add('visible');
+    window._lastBrew=d;
+  }catch(e){}
+}
+function restoreLastBrew(){
+  const d=window._lastBrew;if(!d)return;
+  document.getElementById('promptInput').value=d.prompt||'';
+  if(d.type)selectType(d.type);
+  routeTo('sectionBrew');
+  showToast('last brew restored');
+}
+loadLastBrew();
+
+// ── SIDEBAR — removed, Notion handled via Claude MCP ────────
+function loadWeekItems(){}
+function requestWeekItems(){}
+function parseWeekItems(){}
+// ── TOAST ────────────────────────────────────────────────────
+function showToast(msg,type=''){
+  const t=document.getElementById('toast');t.textContent=msg;t.className=`toast ${type} show`;
+  setTimeout(()=>{t.className='toast'},2800);
+}
+
+// ── TYPE PILLS ───────────────────────────────────────────────
+let selectedType='Substack Note';
+document.querySelectorAll('.type-pill').forEach(p=>p.addEventListener('click',()=>selectType(p.dataset.type)));
+function selectType(type){
+  selectedType=type;
+  document.querySelectorAll('.type-pill').forEach(p=>p.classList.toggle('active',p.dataset.type===type));
+  const hints={'Substack Note':'For Notes: drop in the noticing, or the first line you keep coming back to.','Essay':'For Essays: drop in the door you want to open — an image, a moment, a thing that happened.','Instagram Caption':'One moment, one truth, under 150 words.','Email / Newsletter':'What have you been sitting with this week?','Comment Reply':'Paste the comment you want to respond to.'};
+  document.getElementById('textareaHint').textContent=hints[type]||'';
+}
+
+// ── OPTIONS ──────────────────────────────────────────────────
+const selectedOptions=new Set();
+document.querySelectorAll('.option-toggle').forEach(btn=>btn.addEventListener('click',()=>{
+  const opt=btn.dataset.opt;
+  if(selectedOptions.has(opt)){selectedOptions.delete(opt);btn.classList.remove('on')}else{selectedOptions.add(opt);btn.classList.add('on')}
+}));
+document.querySelectorAll('#replyTones .type-pill').forEach(p=>p.addEventListener('click',()=>{document.querySelectorAll('#replyTones .type-pill').forEach(x=>x.classList.remove('active'));p.classList.add('active')}));
+document.querySelectorAll('#restackAngles .type-pill').forEach(p=>p.addEventListener('click',()=>{document.querySelectorAll('#restackAngles .type-pill').forEach(x=>x.classList.remove('active'));p.classList.add('active')}));
+document.querySelectorAll('#recordingTypes .type-pill').forEach(p=>p.addEventListener('click',()=>{document.querySelectorAll('#recordingTypes .type-pill').forEach(x=>x.classList.remove('active'));p.classList.add('active')}));
+document.querySelectorAll('.reblend-toggle').forEach(btn=>btn.addEventListener('click',()=>btn.classList.toggle('on')));
+let reblendVisible=false;
+function toggleReblend(){reblendVisible=!reblendVisible;document.getElementById('reblendSection').classList.toggle('visible',reblendVisible)}
+
+// ── BREW ─────────────────────────────────────────────────────
+let outputText='';
+async function brew(){
+  const prompt=document.getElementById('promptInput').value.trim();
+  if(!prompt){showToast('add a prompt or idea first','error');return}
+  if(!getAK()){document.getElementById('akBanner').classList.add('visible');document.getElementById('bannerAK').focus();return}
+  const pillar=document.getElementById('pillarSelect').value;
+  const register=document.getElementById('registerSelect').value;
+  const options=[...selectedOptions];
+  const btn=document.getElementById('brewBtn');btn.disabled=true;btn.textContent='steeping...';
+  const sec=document.getElementById('outputSection');const box=document.getElementById('outputBox');const el=document.getElementById('outputText');
+  sec.classList.add('visible');box.classList.add('streaming');el.className='output-text loading';el.innerHTML='pouring<span class="cursor"></span>';
+  document.getElementById('reblendSection').classList.remove('visible');reblendVisible=false;
+  document.getElementById('saveConfirm').classList.remove('open');
+  document.getElementById('varPicker').classList.remove('visible');
+  _variations=[];_selectedVarIdx=-1;
+  sec.scrollIntoView({behavior:'smooth',block:'start'});
+  const sys=`You are the writing assistant for Grace Sarah, author of Bottom of the Cup on Substack. You write exclusively in Grace's voice.
+Grace makes slow systems and practical tools for midlife women whose bodies changed the plan. She writes for women navigating chronic illness, identity shifts, variable energy, long marriages, and the unglamorous middle of being alive in a body that changed the rules.
+Voice: wry, warm, unresolved. Never tidy. Never instructional. Short sentences that do real work. First line earns the rest. Endings honest but not resolved.
+Never use these words: transformative / empower / clarity / journey / game-changer / deep dive / brave / warrior / season (as life metaphor) / capacity / hustle / grind / resonate / powerful / level up.
+Never use these phrases: "pull up a chair" / "welcome to the table" / "glad you're here" / "you're in the right place" / "something about" / "not the kind of" / "this particular kind" / "particular kind" / "holds space" / "sit with" / "lean into" / "that's the whole thing" / "that's the whole point" / "that's its own kind" / "still in it" / "honest company" / "from inside the mess" / "keeps showing up" / "show up" (as metaphor) / "the specific kind".
+Content type: ${selectedType}\nPillar: ${pillar||'any'}\nRegister: ${register}\n${options.length?'Options: '+options.join(', '):''}
+If "3 variations": write three separated by ---. If "first lines only": opening lines only. If "shorter": under 150 words for notes. If "push it rawer": strip softness. If "soft CTA": gentle invitation. If "SEO block": add ---\nSEO\nTitle:\nDescription:\nSlug:\n--- after piece.`;
+  try{
+    const response=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':getAK(),'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:2000,stream:true,system:sys,messages:[{role:'user',content:prompt}]})});
+    if(!response.ok)throw new Error('API error '+response.status);
+    el.className='output-text';el.innerHTML='<span class="cursor"></span>';outputText='';
+    const reader=response.body.getReader();const decoder=new TextDecoder();
+    while(true){const{done,value}=await reader.read();if(done)break;const chunk=decoder.decode(value);for(const line of chunk.split('\n')){if(line.startsWith('data: ')){const d=line.slice(6);if(d==='[DONE]')continue;try{const p=JSON.parse(d);if(p.type==='content_block_delta'&&p.delta?.text){outputText+=p.delta.text;el.innerHTML=outputText.replace(/\n/g,'<br>')+'<span class="cursor"></span>'}}catch{}}}}
+    el.innerHTML=outputText.replace(/\n/g,'<br>');box.classList.remove('streaming');
+    // Check for 3 variations
+    const vars = parseVariations(outputText);
+    if (vars && vars.length >= 2) {
+      renderVariations(vars);
+    } else {
+      saveLastBrew(outputText,selectedType,prompt);loadLastBrew();
+    }
+  }catch(err){el.className='output-text loading';el.textContent='something went sideways — '+err.message;box.classList.remove('streaming')}
+  btn.disabled=false;btn.textContent='brew it →';
+}
+async function reblend(){
+  if(!outputText)return;
+  const adjs=[...document.querySelectorAll('.reblend-toggle.on')].map(b=>b.dataset.adj);
+  const note=document.getElementById('reblendNote').value.trim();
+  const btn=document.getElementById('reblendBtn');btn.disabled=true;btn.textContent='reblending...';
+  const el=document.getElementById('outputText');const orig=outputText;
+  el.innerHTML='reblending<span class="cursor"></span>';
+  const sys=`Reblend this piece with adjustments: ${adjs.join(', ')||'general refinement'}. ${note?'Note: '+note:''} Keep Grace\'s voice — wry, warm, unresolved. Return ONLY the reblended piece.
+Never introduce: "pull up a chair" / "welcome to the table" / "holds space" / "sit with" / "lean into" / "show up" (as metaphor) / "that\'s the whole thing" / "that\'s its own kind" / "still in it" / transformative / empower / clarity / capacity / resonate.`;
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':getAK(),'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:1500,system:sys,messages:[{role:'user',content:orig}]})});
+    const data=await res.json();const text=data.content?.[0]?.text||'';outputText=text;el.innerHTML=text.replace(/\n/g,'<br>');
+  }catch(e){el.innerHTML=orig.replace(/\n/g,'<br>');showToast('reblend went sideways','error')}
+  btn.disabled=false;btn.textContent='reblend it →';
+}
+function copyOutput(){navigator.clipboard.writeText(outputText).then(()=>showToast('copied'))}
+function copyMini(id){navigator.clipboard.writeText(document.getElementById(id).textContent).then(()=>showToast('copied'))}
+function copyCo(id){navigator.clipboard.writeText(document.getElementById(id).textContent).then(()=>showToast('copied'))}
+function copyCta(btn,text){navigator.clipboard.writeText(text).then(()=>{btn.textContent='copied ✓';btn.classList.add('copied');setTimeout(()=>{btn.textContent='copy';btn.classList.remove('copied')},2200)})}
+function openSaveConfirm(){document.getElementById('saveConfirm').classList.add('open')}
+function closeSaveConfirm(){document.getElementById('saveConfirm').classList.remove('open')}
+// ── VARIATION PICKER ─────────────────────────────────────────
+let _variations = [];
+let _selectedVarIdx = -1;
+
+function parseVariations(text) {
+  const parts = text.split(/\n---+\n/).map(s => s.trim()).filter(Boolean);
+  return parts.length >= 2 ? parts : null;
+}
+
+function renderVariations(vars) {
+  _variations = vars;
+  _selectedVarIdx = -1;
+  const container = document.getElementById('varCards');
+  container.innerHTML = vars.map((v, i) => `
+    <div class="var-card" id="var-${i}" onclick="selectVar(${i})">
+      <div class="var-card-num">variation ${i + 1}</div>
+      <div class="var-card-text">${v.replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>')}</div>
+      <span class="var-card-badge">selected</span>
+    </div>
+  `).join('');
+  document.getElementById('varPicker').classList.add('visible');
+  document.getElementById('outputSection').classList.remove('visible');
+  document.getElementById('varPicker').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function selectVar(i) {
+  _selectedVarIdx = i;
+  document.querySelectorAll('.var-card').forEach((c, idx) => c.classList.toggle('selected', idx === i));
+  document.getElementById('varUseBtn').classList.add('visible');
+}
+
+function useSelectedVariation() {
+  if (_selectedVarIdx < 0 || !_variations[_selectedVarIdx]) return;
+  outputText = _variations[_selectedVarIdx];
+  const el = document.getElementById('outputText');
+  el.className = 'output-text';
+  el.innerHTML = outputText.replace(/\n/g, '<br>');
+  document.getElementById('varPicker').classList.remove('visible');
+  document.getElementById('outputSection').classList.add('visible');
+  document.getElementById('outputSection').scrollIntoView({behavior:'smooth',block:'start'});
+  saveLastBrew(outputText, selectedType, document.getElementById('promptInput').value.trim());
+  loadLastBrew();
+}
+
+// ── NOTION SAVE ───────────────────────────────────────────────
+async function saveToNotion() {
+  const title = document.getElementById('saveTitle').value.trim() || 'untitled';
+  const status = document.getElementById('saveStatus').value;
+  const contentType = document.getElementById('saveContentType').value;
+  const pillar = document.getElementById('savePillar').value;
+  const platform = document.getElementById('savePlatform').value;
+  const tone = document.getElementById('saveTone').value;
+
+  const btn = document.getElementById('saveConfirmBtn');
+  const statusEl = document.getElementById('notionSaveStatus');
+  btn.disabled = true;
+  btn.textContent = 'pouring...';
+  statusEl.className = 'notion-save-status show saving';
+  statusEl.textContent = 'sending to the content pour over...';
+
+  try {
+    const res = await fetch('/.netlify/functions/save-content', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title, status, contentType, pillar, platform, tone, content: outputText })
+    });
+    const data = await res.json();
+    if (data.ok) {
+      statusEl.className = 'notion-save-status show saved';
+      statusEl.textContent = 'poured into the content pour over ☕';
+      btn.textContent = 'poured ✓';
+      setTimeout(() => closeSaveConfirm(), 2500);
+    } else {
+      throw new Error(data.error || 'Something went wrong');
+    }
+  } catch (e) {
+    statusEl.className = 'notion-save-status show error';
+    statusEl.textContent = 'something went sideways — ' + e.message;
+    btn.disabled = false;
+    btn.textContent = 'pour it in →';
+  }
+}
+
+// ── QUICK POUR ───────────────────────────────────────────────
+function fetchPostContext(){
+  const url=document.getElementById('postUrlInput').value.trim();
+  if(!url){showToast('paste a post URL first','error');return}
+  const btn=document.getElementById('fetchUrlBtn');
+  btn.textContent='fetching...';btn.disabled=true;
+  if(typeof sendPrompt==='function'){
+    sendPrompt(`Fetch the title and opening paragraph of this Substack post: ${url}. Reply with ONLY: TITLE: [title on one line] OPENING: [first 1-2 sentences of the post]. Nothing else.`);
+    // Show paste-back input
+    const orig=document.getElementById('origNoteInput');
+    orig.placeholder='Claude is fetching the post context — paste the result here when it appears in chat...';
+    showToast('asked Claude to fetch the post ☕');
+  }else{
+    showToast('open this in Claude to use URL fetch','error');
+  }
+  btn.textContent='fetch →';btn.disabled=false;
+}
+async function brewReply(){
+  const orig=document.getElementById('origNoteInput').value.trim();
+  const snippet=document.getElementById('snippetInput').value.trim();
+  const draft=document.getElementById('replyDraftInput').value.trim();
+  if(!snippet){showToast('paste their comment first','error');return}
+  const tone=document.querySelector('#replyTones .type-pill.active')?.dataset.tone||'warm & seen';
+  const btn=document.getElementById('replyBtn');btn.disabled=true;btn.textContent='pouring...';
+  const out=document.getElementById('replyOutput');const el=document.getElementById('replyText');
+  out.classList.add('visible');el.className='output-mini-text loading';el.textContent='pouring...';
+  const graceNote=tone==='grace — personal, specific, hers'?'This reply should sound like Grace specifically — her voice, her particular wryness, the coffee-loving woman who builds tools for bodies that changed the rules. Personal and specific, not generic warm.':'';
+  const draftNote=draft?`Grace wants to say something like this (shape it into her voice, don't quote it back): "${draft}"`:'';
+  const sys=`Write a comment reply in Grace Sarah's voice — wry, warm, specific. Under 30 words. Tone: ${tone}. No hashtags. ${orig?'Original note context: '+orig+'.':''} ${graceNote} ${draftNote}
+Never use: "pull up a chair" / "welcome to the table" / "glad you\'re here" / "holds space" / "sit with" / "lean into" / "show up" (as metaphor) / "that\'s the whole thing" / "still in it" / "from inside the mess" / transformative / empower / capacity / resonate.`;
+  try{const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':getAK(),'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:200,system:sys,messages:[{role:'user',content:snippet}]})});const data=await res.json();el.className='output-mini-text';el.textContent=data.content?.[0]?.text||'';}catch(e){el.textContent='something went sideways';el.className='output-mini-text'}
+  btn.disabled=false;btn.textContent='pour a reply →';
+}
+async function brewRestack(){
+  const post=document.getElementById('restackInput').value.trim();
+  if(!post){showToast('paste a post first','error');return}
+  const angle=document.querySelector('#restackAngles .type-pill.active')?.dataset.angle||'this is exactly it';
+  const btn=document.getElementById('restackBtn');btn.disabled=true;btn.textContent='steeping...';
+  const out=document.getElementById('restackOutput');const el=document.getElementById('restackText');
+  out.classList.add('visible');el.className='output-mini-text loading';el.textContent='steeping...';
+  const sys=`Write a restack note for Grace Sarah. Under 40 words. Sounds like Grace over coffee. No hashtags. Angle: ${angle}. ONLY the restack note.
+Never use: "pull up a chair" / "welcome to the table" / "holds space" / "show up" (as metaphor) / "still in it" / transformative / empower / capacity / resonate / game-changer.`;
+  try{const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':getAK(),'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:150,system:sys,messages:[{role:'user',content:post}]})});const data=await res.json();el.className='output-mini-text';el.textContent=data.content?.[0]?.text||'';}catch(e){el.textContent='something went sideways';el.className='output-mini-text'}
+  btn.disabled=false;btn.textContent='draft the restack →';
+}
+
+// ── FROM THE RECORDING ────────────────────────────────────────
+let _recPost='';
+async function brewFromRecording(){
+  const transcript=document.getElementById('transcriptInput').value.trim();
+  if(!transcript){showToast('paste your transcript first','error');return}
+  const rtype=document.querySelector('#recordingTypes .type-pill.active')?.dataset.rtype||'a session';
+  const ctx=document.getElementById('recordingContext').value.trim();
+  const btn=document.getElementById('recordingBrewBtn');btn.disabled=true;btn.textContent='steeping...';
+  document.getElementById('postText').textContent='';document.getElementById('noteText').textContent='';document.getElementById('pinText').textContent='';
+  document.getElementById('noteOutputBlock').style.display='none';document.getElementById('pinOutputBlock').style.display='none';
+  document.getElementById('recordingOutputs').style.display='block';
+  const sys=`You are Grace Sarah's writing assistant. She recorded a screen session — ${rtype}. ${ctx?'Context: '+ctx:''} Write a Substack post from the transcript in her voice: wry, warm, specific. Open with the real moment. 300-500 words. No headers or bullets. ONLY the post.
+Never use: "pull up a chair" / "welcome to the table" / "glad you\'re here" / "holds space" / "sit with" / "lean into" / "show up" (as metaphor) / "that\'s the whole thing" / "that\'s its own kind" / "still in it" / "honest company" / "from inside the mess" / "particular kind" / transformative / empower / clarity / capacity / resonate / game-changer / hustle / grind.`;
+  try{const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':getAK(),'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:1000,system:sys,messages:[{role:'user',content:'Transcript:\n\n'+transcript}]})});const data=await res.json();const text=data.content?.[0]?.text||'';document.getElementById('postText').textContent=text;_recPost=text;}catch(e){showToast('something went sideways','error')}
+  btn.disabled=false;btn.textContent='brew the post →';
+}
+async function brewNoteFromPost(){
+  if(!_recPost){showToast('brew the post first','error');return}
+  const btn=document.getElementById('noteFromPostBtn');btn.disabled=true;btn.textContent='steeping...';
+  document.getElementById('noteOutputBlock').style.display='block';document.getElementById('noteText').textContent='';
+  const sys=`Write a Substack Note for this post in Grace Sarah's voice. Under 150 words. NOT a summary — it\'s the moment before the post. Opens mid-thought. Quiet invitation at end. No hashtags. ONLY the Note.
+Never use: "pull up a chair" / "welcome to the table" / "glad you\'re here" / "holds space" / "show up" (as metaphor) / "that\'s the whole thing" / "still in it" / transformative / empower / capacity / resonate.`;
+  try{const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':getAK(),'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:400,system:sys,messages:[{role:'user',content:_recPost}]})});const data=await res.json();document.getElementById('noteText').textContent=data.content?.[0]?.text||'';}catch(e){showToast('something went sideways','error')}
+  btn.disabled=false;btn.textContent='write a note for this →';
+}
+async function brewPinFromPost(){
+  if(!_recPost){showToast('brew the post first','error');return}
+  const btn=document.getElementById('pinFromPostBtn');btn.disabled=true;btn.textContent='steeping...';
+  document.getElementById('pinOutputBlock').style.display='block';document.getElementById('pinText').textContent='';
+  const sys=`Write a Pinterest caption for this post in Grace Sarah's voice. 80-120 words. Opens with the problem. 2-3 paragraphs. Quiet CTA at end. 3-5 keywords woven in. No hashtags. ONLY the caption.
+Never use: "pull up a chair" / "welcome to the table" / "holds space" / "show up" (as metaphor) / "that\'s the whole thing" / transformative / empower / capacity / resonate / game-changer.`;
+  try{const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':getAK(),'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:300,system:sys,messages:[{role:'user',content:_recPost}]})});const data=await res.json();document.getElementById('pinText').textContent=data.content?.[0]?.text||'';}catch(e){showToast('something went sideways','error')}
+  btn.disabled=false;btn.textContent='write a pinterest caption →';
+}
+
+// ── PROMPT PICKER ────────────────────────────────────────────
+const PROMPTS=[
+  {text:"How many times have you reheated your coffee today? Be honest.",thread:"cup",type:"note"},
+  {text:"What does a good week actually look like for you — not the aspirational version, the real one?",thread:"body",type:"note"},
+  {text:"What have you stopped apologising for that you used to apologise for constantly?",thread:"body",type:"essay"},
+  {text:"I cancelled something this week and felt immediately better. Tell me I'm not alone.",thread:"cup",type:"note"},
+  {text:"What's the difference between resting and hiding? I'm asking because I'm still figuring that out.",thread:"body",type:"essay"},
+  {text:"If your body filed a formal complaint about this week, what would be in it?",thread:"body",type:"note"},
+  {text:"What's the thing you keep coming back to — the idea, the question, the half-formed thought that won't resolve?",thread:"grace",type:"essay"},
+  {text:"What's something you made or built or started that felt small at the time and turned out to matter?",thread:"grace",type:"note"},
+  {text:"The second cup hit different this morning. Tell me you know what I mean.",thread:"cup",type:"note"},
+  {text:"I have been performing fine for so long I sometimes forget what not-fine actually feels like until my jaw reminds me.",thread:"grace",type:"essay"},
+  {text:"Brain fog is not a metaphor. It is a Tuesday. It is the sentence you started three times.",thread:"body",type:"note"},
+  {text:"Rest used to be something I earned. I'm working on forgetting I ever believed that.",thread:"cup",type:"note"},
+  {text:"I am building something real in the middle of a life that keeps interrupting.",thread:"cup",type:"essay"},
+  {text:"What are you in the middle of right now? Not the highlight reel version — the actual middle.",thread:"grace",type:"essay"},
+  {text:"I've been reheating the same idea for two weeks now. I think it's finally ready.",thread:"cup",type:"email"},
+  // BUILDING & AI — NOTES
+  {text:"I built a tool on a Tuesday when my body had opinions about the rest of the to-do list. The tool didn't care about the flare. It just worked.",thread:"cup",type:"note"},
+  {text:"AI didn't fix my brain fog. It just meant I could still make something useful while I was waiting for the fog to lift.",thread:"body",type:"note"},
+  {text:"Someone is going to tell you AI is cheating. They are probably not building on four hours of sleep and a body that cancelled three plans this week.",thread:"body",type:"note"},
+  {text:"The coffee was cold. The code was broken. The tool worked anyway. This is what building looks like from here.",thread:"cup",type:"note"},
+  {text:"I am not a developer. I am a woman with a variable energy body and a very patient AI and an unreasonable number of reheated cups.",thread:"cup",type:"note"},
+  {text:"The barrier to building used to be knowing how. Now it's just deciding what's worth building. That is a genuinely different problem.",thread:"grace",type:"note"},
+  // BUILDING & AI — ESSAYS
+  {text:"I built something this week that would have taken me six months to figure out alone. I am still deciding how to feel about that.",thread:"grace",type:"essay"},
+  {text:"What it actually looks like to build with AI when you have a chronic illness — the part nobody posts about, which is the three sessions it took to get one thing working.",thread:"body",type:"essay"},
+  {text:"The productivity people will tell you AI saves time. What they don't say is that for some of us it doesn't save time — it makes the thing possible at all. Those are not the same story.",thread:"body",type:"essay"},
+  {text:"I didn't build tools because I wanted to be a builder. I built tools because the ones that existed were designed for someone with a different body and a different week.",thread:"grace",type:"essay"},
+  {text:"There is a version of this conversation about AI that is about efficiency and output and scale. I am not in that conversation. I am in the one about what becomes possible when the barrier is your own biology.",thread:"body",type:"essay"},
+  {text:"The first tool I built for myself felt embarrassing to admit — too small, too personal, too much like admitting I needed help with things I used to do fine. I built it anyway.",thread:"cup",type:"essay"},
+];
+const CHAT_PROMPTS=[
+  {text:"How many times have you reheated your coffee today? Be honest. There's no wrong answer here.",cat:"wry"},
+  {text:"Rate your current coffee situation: hot, lukewarm, cold and forgotten, or haven't had one yet and it shows.",cat:"wry"},
+  {text:"What does a good week actually look like for you — not the aspirational version, the real one?",cat:"body"},
+  {text:"What's the difference between resting and hiding? I'm asking because I'm still figuring that out.",cat:"body"},
+  {text:"If your body filed a formal complaint about this week, what would be in it?",cat:"body"},
+  {text:"If you've been reading quietly for a while — I'd love to know what brought you here.",cat:"invitational"},
+  {text:"What's something you made or built or started that felt small at the time and turned out to matter?",cat:"invitational"},
+  {text:"What's the piece of advice you're most tired of hearing?",cat:"engagement"},
+  {text:"Tell me about a small thing that actually helped — not a solution, just a thing that helped.",cat:"engagement"},
+  {text:"What are you in the middle of right now? Not the highlight reel version — the actual middle.",cat:"engagement"},
+  {text:"I built something this week on four hours of sleep and a reheated cup. What did you make when the conditions were wrong?",cat:"engagement"},
+  {text:"The productivity people will tell you AI saves time. For some of us it doesn't save time — it makes the thing possible at all. Has anything worked that way for you?",cat:"engagement"},
+  {text:"What's something you built or made that felt too small to mention — and turned out to matter more than the big things?",cat:"invitational"},
+];
+let threadFilter='all',typeFilter='all',seen=new Set(),currentPrompt=null;
+let chatFilter='all',chatSeen=new Set(),currentChatPrompt=null;
+function drawPrompt(){
+  const pool=PROMPTS.filter(p=>(threadFilter==='all'||p.thread===threadFilter)&&(typeFilter==='all'||p.type===typeFilter));
+  if(!pool.length)return;
+  let unseen=pool.filter(p=>!seen.has(p.text));if(!unseen.length){seen=new Set();unseen=pool}
+  const pick=unseen[Math.floor(Math.random()*unseen.length)];seen.add(pick.text);currentPrompt=pick;
+  document.getElementById('pickerPrompt').textContent=pick.text;
+  document.getElementById('pickerCount').textContent=seen.size+' of '+pool.length;
+}
+function usePrompt(){if(!currentPrompt)return;document.getElementById('promptInput').value=currentPrompt.text;togglePicker();routeTo('sectionBrew')}
+function togglePicker(){const p=document.getElementById('pickerPanel');p.style.display=p.style.display==='none'?'block':'none';if(p.style.display!=='none'&&!currentPrompt)drawPrompt()}
+function pickerFilter(btn){
+  const g=btn.dataset.group;
+  document.querySelectorAll(`#pickerFilters [data-group="${g}"]`).forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  if(g==='thread')threadFilter=btn.dataset.val;else typeFilter=btn.dataset.val;
+  seen=new Set();drawPrompt();
+}
+drawPrompt();
+function drawChatPrompt(){
+  const pool=CHAT_PROMPTS.filter(p=>chatFilter==='all'||p.cat===chatFilter);
+  if(!pool.length)return;
+  let unseen=pool.filter(p=>!chatSeen.has(p.text));if(!unseen.length){chatSeen=new Set();unseen=pool}
+  const pick=unseen[Math.floor(Math.random()*unseen.length)];chatSeen.add(pick.text);currentChatPrompt=pick;
+  document.getElementById('chatPromptText').textContent=pick.text;
+  document.getElementById('chatCount').textContent=chatSeen.size+' of '+pool.length;
+}
+function chatTabClick(btn){document.querySelectorAll('.chat-tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');chatFilter=btn.dataset.cat;chatSeen=new Set();drawChatPrompt()}
+function useChatPrompt(){if(!currentChatPrompt)return;document.getElementById('promptInput').value=currentChatPrompt.text;selectType('Substack Note');routeTo('sectionBrew');showToast('prompt sent to the brew tool')}
+drawChatPrompt();
+
+// ── WEEKLY POUR ──────────────────────────────────────────────
+let currentPlan=null;
+function selectPourPill(groupId,btn){document.querySelectorAll(`#${groupId} .pour-pill, #${groupId} .count-pill`).forEach(b=>b.classList.remove('active'));btn.classList.add('active')}
+function togglePourPill(btn){btn.classList.toggle('active')}
+function getPourPills(groupId){return[...document.querySelectorAll(`#${groupId} .pour-pill.active, #${groupId} .count-pill.active`)].map(b=>b.dataset.val)}
+async function brewWeek(){
+  const energy=getPourPills('energyGroup')[0]||'medium';
+  const happening=document.getElementById('whatsHappening').value.trim();
+  const count=getPourPills('countGroup')[0]||'3';
+  const types=getPourPills('typesGroup');
+  const constraints=document.getElementById('constraints').value.trim();
+  if(!happening){showToast("tell me what's in the pot first",'error');return}
+  const btn=document.getElementById('pourBrewBtn');btn.disabled=true;btn.textContent='steeping...';
+  const energyMap={low:'cold cup — low energy week',medium:'lukewarm — managing it',good:'fresh pour — feeling good'};
+  const sys=`You are the planning voice inside Bottom of the Cup. Grace needs a realistic weekly content plan.
+Rules: match piece count exactly; match energy — low gets lighter pieces; space across the week; be specific about what each piece is; account for constraints.
+Phases ONLY: Substack, Socials, Content, Scripts, Launch. Buckets ONLY: daily brew, creator roast, steep & restore.
+Return ONLY valid JSON no markdown no backticks:
+{"week_note":"one warm wry sentence","pieces":[{"day":"Monday","task":"specific title","type":"Substack Note","phase":"Substack","bucket":"creator roast","priority":"High","notes":"one sentence angle","format_tag":"note"}]}
+format_tag: note/substack/loom/pinterest/socials/content. Days Monday-Sunday only.`;
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':getAK(),'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:1500,system:sys,messages:[{role:'user',content:`Energy: ${energyMap[energy]}\nWhat's in the pot: ${happening}\nPieces: ${count}\nFormats: ${types.join(', ')||'any'}\nConstraints: ${constraints||'none'}`}]})});
+    const data=await res.json();const raw=data.content?.map(b=>b.text||'').join('')||'';
+    const parsed=JSON.parse(raw.replace(/```json|```/g,'').trim());currentPlan=parsed;renderWeekPlan(parsed);
+  }catch(e){showToast('something went sideways','error')}
+  btn.disabled=false;btn.textContent='brew my week →';
+}
+const tagMap={note:'tag-note',substack:'tag-sub',loom:'tag-loom',pinterest:'tag-pin',socials:'tag-soc',content:'tag-cnt'};
+function renderWeekPlan(plan){
+  const container=document.getElementById('weekPlan');container.innerHTML='';
+  if(plan.week_note){const n=document.createElement('div');n.className='week-note-block';n.textContent=plan.week_note;container.appendChild(n)}
+  plan.pieces.forEach(p=>{
+    const tc=tagMap[p.format_tag]||'tag-cnt';
+    const card=document.createElement('div');card.className='day-card';
+    card.innerHTML=`<div class="day-card-header"><span class="day-name">${p.day}</span><span class="day-type">${p.type}</span></div><div class="day-body"><div class="day-task">${p.task}</div>${p.notes?`<div class="day-desc">${p.notes}</div>`:''}<div class="day-meta"><span class="meta-tag ${tc}">${p.phase}</span><span class="meta-tag" style="background:#f1efe8;color:#5f5e5a;border-color:#b4b2a9;">${p.priority}</span></div></div>`;
+    container.appendChild(card);
+  });
+  document.getElementById('weekOutput').classList.add('visible');
+  document.getElementById('weekOutput').scrollIntoView({behavior:'smooth',block:'start'});
+  document.getElementById('notionStatus').className='notion-status';
+}
+function sendToNotion(){
+  if(!currentPlan)return;
+  const btn=document.getElementById('notionSendBtn');const status=document.getElementById('notionStatus');
+  const today=new Date();
+  const getDayDate=dayName=>{const days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];const t=days.indexOf(dayName);const c=today.getDay();let diff=t-c;if(diff<=0)diff+=7;const d=new Date(today);d.setDate(today.getDate()+diff);return d.toISOString().split('T')[0]};
+
+  const pieces = currentPlan.pieces.map(p => ({
+    task: p.task,
+    type: p.type,
+    phase: p.phase,
+    notes: p.notes,
+    postDate: getDayDate(p.day)
+  }));
+
+  btn.disabled=true;
+  status.className='notion-status loading';
+  status.textContent='pouring your week into the content pour over...';
+
+  fetch('/.netlify/functions/save-week',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({pieces})
+  })
+  .then(r=>r.json())
+  .then(data=>{
+    if(data.ok > 0){
+      status.className='notion-status success';
+      status.textContent=`${data.ok} piece${data.ok!==1?'s':''} poured into the content pour over ☕${data.failed?' ('+data.failed+' failed)':''}`;
+      btn.innerHTML='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> poured ✓';
+    }else{
+      throw new Error(data.errors?.[0]||'All pieces failed');
+    }
+  })
+  .catch(e=>{
+    status.className='notion-status error';
+    status.textContent='something went sideways — '+e.message;
+    btn.disabled=false;
+  });
+}
+</script>
+</body>
+</html>
