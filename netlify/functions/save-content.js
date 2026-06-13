@@ -23,13 +23,13 @@ exports.handler = async (event) => {
   if (!title) return { statusCode: 400, headers: CORS, body: JSON.stringify({ error: 'Title is required' }) };
 
   const properties = {
-    title: [{ text: { content: title } }],
-  };
-  if (status) properties.status = { status: { name: status } };
-  if (contentType) properties['content type'] = { multi_select: [{ name: contentType }] };
-  if (pillar) properties.pillar = { select: { name: pillar } };
-  if (platform) properties.platform = { select: { name: platform } };
-  if (tone) properties.tone = { select: { name: tone } };
+  title: { title: [{ text: { content: title } }] },
+};
+if (status) properties.status = { select: { name: status } };
+if (contentType) properties['content type'] = { multi_select: [{ name: contentType }] };
+if (pillar) properties.pillar = { select: { name: pillar } };
+if (platform) properties.platform = { select: { name: platform } };
+if (tone) properties.tone = { select: { name: tone } };
 
   try {
     const res = await fetch('https://api.notion.com/v1/pages', {
